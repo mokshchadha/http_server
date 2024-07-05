@@ -3,11 +3,12 @@ use std::convert::TryFrom;
 use std::error::Error;
 use std::fmt::{Debug, Display, Formatter};
 use std::str::{self, Utf8Error};
+use crate::query_string::QueryString;
 
-
+#[derive(Debug)]
 pub struct Request<'buff> {
     path: &'buff str,
-    query_string: Option<&'buff str>,
+    query_string: Option<QueryString<'buff>>,
     method: Method,
 }
 
@@ -26,7 +27,7 @@ impl<'buff> TryFrom<&'buff [u8]> for Request<'buff > {
         let method: Method = method.parse()?;
         let mut query_string = None;
         if let Some(i) = path.find('?') {
-            query_string = Some(&path[i + 1..]);
+            query_string = Some(QueryString::from(&path[i + 1..]));
             path = &path[..i];
         }
 
