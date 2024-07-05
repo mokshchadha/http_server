@@ -5,6 +5,7 @@ pub struct QueryString<'buff> {
     data: HashMap<&'buff str, Value<'buff>>,
 }
 
+#[derive(Debug)]
 pub enum Value<'buff> {
     Single(&'buff str),
     Multiple(Vec<&'buff str>),

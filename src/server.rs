@@ -1,6 +1,7 @@
-use std::io::Read;
+use std::io::{Read, Write};
 use std::net::TcpListener;
 use crate::request::Request;
+use crate::response::{Response, StatusCode};
 
 
 pub struct Server {
@@ -27,7 +28,10 @@ impl Server {
                        Ok(_) => {
                            println!("Received a request: {}", String::from_utf8_lossy(&buffer));
                            match Request::try_from(&buffer[..]) {
-                               Ok(req) => {},
+                               Ok(req) => {
+                                   let resp = Response::new(StatusCode::Ok, None);
+                                   write!(stream, "{}", resp);
+                               },
                                Err(e) => println!("Failed to pass an request {}", e)
                            }
 
